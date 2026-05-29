@@ -579,7 +579,7 @@
       <span>
         <strong>Atenção:</strong> Zonas em <em>downgraded</em> sem atividade recente <strong>não geram novo registro</strong> —
         o estado permanece vigente mesmo sem aparecer no período recente.
-        Dashboard com dados de amostra MLB · Substitua pelas queries BigQuery com <code>SHP_SITE = 'MLM'</code>.
+        Dashboard com dados de amostra MLM · Substitua pelas queries BigQuery com <code>SHP_SITE = 'MLM'</code>.
       </span>
     </div>
 
@@ -906,15 +906,15 @@ const C = {
 };
 
 /* ── DATA GENERATION ────────────────────────────────────────── */
-const NODES_MLB = [
+const NODES_MLM = [
   'SAO-01','SAO-02','RIO-01','RIO-02','BHZ-01',
   'POA-01','CWB-01','BSB-01','SSA-01','FOR-01',
   'REC-01','MAN-01','GYN-01','VIX-01','FLN-01',
 ];
 
-/* Transportadoras MLB — nomes reais de CARRIER_NAME
+/* Transportadoras MLM — nomes reais de CARRIER_NAME
    Fonte: meli-bi-data.WHOWNER.LK_SHP_FLEX_TRANSPORTATION via join 30 dias */
-const CARRIERS_MLB = [{"name": "RAPIBOY"}, {"name": "PACKATELAS"}, {"name": "MOBIICLUB"}, {"name": "MOOVA"}, {"name": "PIBOX"}];
+const CARRIERS_MLM = [{"name": "RAPIBOY"}, {"name": "PACKATELAS"}, {"name": "MOBIICLUB"}, {"name": "MOOVA"}, {"name": "PIBOX"}];
 const SEG_MAP    = { muito_bom:'Muito Bom', bom:'Bom', muito_ruim:'Muito Ruim' };
 const STATUS_MAP = { ok:'OK', intervened:'Intervened', downgraded:'Downgraded' };
 
@@ -945,7 +945,7 @@ function buildSellerData() {
   const rows = [];
   const segs = ['muito_bom','muito_bom','muito_bom','bom','bom','muito_ruim'];
   let sid = 100001;
-  NODES_MLB.forEach(nodo => {
+  NODES_MLM.forEach(nodo => {
     const total = Math.round(80 + r() * 420);
     for (let i = 0; i < total; i++) {
       const seg = segs[Math.floor(r() * segs.length)];
@@ -956,7 +956,7 @@ function buildSellerData() {
       const perf = seg==='muito_bom' ? 97+r()*3 : seg==='bom' ? 90+r()*7 : 70+r()*20;
       /* ~70% dos sellers têm transportadora vinculada; 30% null (retirada/outros) */
       const carrier = r() < 0.70
-        ? CARRIERS_MLB[Math.floor(r() * CARRIERS_MLB.length)].name
+        ? CARRIERS_MLM[Math.floor(r() * CARRIERS_MLM.length)].name
         : null;
       /* distribui sellers entre abril e maio (60% abril, 40% maio) */
       const month = r() < 0.40 ? '2026-05' : '2026-04';
@@ -1356,7 +1356,7 @@ class Dashboard {
     const sel = document.getElementById('f-carrier');
     /* garante que não duplique opções */
     while (sel.options.length > 2) sel.remove(2);
-    CARRIERS_MLB.forEach(c => {
+    CARRIERS_MLM.forEach(c => {
       const opt = document.createElement('option');
       opt.value = c.name;
       opt.textContent = c.name;
@@ -1619,7 +1619,7 @@ class Dashboard {
   _populateCarrierWeeklySelect() {
     const sel = document.getElementById('cw-carrier');
     if (!sel || sel.options.length > 1) return;
-    CARRIERS_MLB.forEach(c => {
+    CARRIERS_MLM.forEach(c => {
       const opt = document.createElement('option');
       opt.value = c.name; opt.textContent = c.name;
       sel.appendChild(opt);
@@ -1798,7 +1798,7 @@ class Dashboard {
   /* ── Chart: stacked bar carrier × status ─────────────────── */
   renderChartCarrierStatus() {
     const s = this.filtSellers;
-    const names = CARRIERS_MLB.map(c => c.name).concat(['(Sem carrier)']);
+    const names = CARRIERS_MLM.map(c => c.name).concat(['(Sem carrier)']);
     const okD  = names.map(n => s.filter(x => (x.carrier||'(Sem carrier)') === n && x.status === 'ok').length);
     const itD  = names.map(n => s.filter(x => (x.carrier||'(Sem carrier)') === n && x.status === 'intervened').length);
     const dgD  = names.map(n => s.filter(x => (x.carrier||'(Sem carrier)') === n && x.status === 'downgraded').length);
@@ -1825,7 +1825,7 @@ class Dashboard {
   /* ── Chart: % Downgraded por transportadora ──────────────── */
   renderChartCarrierDgPct() {
     const s = this.filtSellers;
-    const names = CARRIERS_MLB.map(c => c.name).concat(['(Sem carrier)']);
+    const names = CARRIERS_MLM.map(c => c.name).concat(['(Sem carrier)']);
     const dgPct = names.map(n => {
       const tot = s.filter(x => (x.carrier||'(Sem carrier)') === n).length;
       const dg  = s.filter(x => (x.carrier||'(Sem carrier)') === n && x.status === 'downgraded').length;
@@ -1856,7 +1856,7 @@ class Dashboard {
   /* ── Chart: full stacked por carrier ─────────────────────── */
   renderChartCarrierStack() {
     const s = this.filtSellers;
-    const names = CARRIERS_MLB.map(c => c.name).concat(['(Sem carrier)']);
+    const names = CARRIERS_MLM.map(c => c.name).concat(['(Sem carrier)']);
     const okD  = names.map(n => s.filter(x => (x.carrier||'(Sem carrier)') === n && x.status === 'ok').length);
     const itD  = names.map(n => s.filter(x => (x.carrier||'(Sem carrier)') === n && x.status === 'intervened').length);
     const dgD  = names.map(n => s.filter(x => (x.carrier||'(Sem carrier)') === n && x.status === 'downgraded').length);
