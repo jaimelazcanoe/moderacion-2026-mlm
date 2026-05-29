@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Moderación 2026 · Mensajeros Flex — MLM</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --yellow: #FFE600;
+      --yellow-dark: #E6CF00;
+      --bg: #f4f4f4;
+      --card: #ffffff;
+      --text: #1a1a1a;
+      --muted: #666;
+      --ok: #00a650;
+      --intervened: #f5a623;
+      --downgraded: #d0021b;
+      --border: #e0e0e0;
+      --radius: 8px;
+      --shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--yellow);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 3px solid var(--yellow-dark);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .brand {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -.5px;
+    }
+    .brand span { font-weight: 300; }
+    .header-sub {
+      font-size: 13px;
+      color: #333;
+      margin-left: auto;
+    }
+
+    /* ── Nav tabs ── */
+    nav {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 0;
+      padding: 0 24px;
+    }
+    nav a {
+      text-decoration: none;
+      color: var(--muted);
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 500;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    nav a.active, nav a:hover {
+      color: var(--text);
+      border-bottom-color: var(--yellow-dark);
+    }
+
+    /* ── Layout ── */
+    main { max-width: 1400px; margin: 0 auto; padding: 20px 24px 60px; }
+
+    /* ── Filters ── */
+    .filters {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+    .filter-group { display: flex; flex-direction: column; gap: 4px; }
+    .filter-group label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+    .filter-group select {
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 13px;
+      background: #fff;
+      cursor: pointer;
+      min-width: 140px;
+    }
+    .filter-group select:focus { outline: 2px solid var(--yellow); }
+
+    .warning-box {
+      background: #fff8e1;
+      border-left: 4px solid #f5a623;
+      border-radius: 4px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    /* ── Section title ── */
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin: 28px 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── KPI Cards ── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .kpi {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+    .kpi .label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 6px; }
+    .kpi .value { font-size: 28px; font-weight: 700; line-height: 1; }
+    .kpi .sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+    .kpi .badge { font-size: 11px; padding: 2px 6px; border-radius: 20px; font-weight: 600; margin-top: 6px; display: inline-block; }
+    .badge-ok { background: #e6f7ed; color: var(--ok); }
+    .badge-warn { background: #fff3e0; color: var(--intervened); }
+    .badge-bad { background: #fde8ea; color: var(--downgraded); }
+    .kpi.highlight { border-left: 4px solid var(--yellow); }
+    .kpi.ok-card { border-left: 4px solid var(--ok); }
+    .kpi.warn-card { border-left: 4px solid var(--intervened); }
+    .kpi.bad-card { border-left: 4px solid var(--downgraded); }
+
+    /* ── Charts grid ── */
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .chart-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .chart-grid-full {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .chart-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+    .chart-card h3 {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 12px;
+    }
+    .chart-card canvas { max-height: 220px; }
+
+    /* ── Shipment metrics ── */
+    .shipment-metrics {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    /* ── Carrier select inline ── */
+    .inline-select {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .inline-select select {
+      padding: 4px 8px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    /* ── Info box ── */
+    .info-box {
+      background: #e8f4fd;
+      border-left: 4px solid #2196f3;
+      border-radius: 4px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #444;
+      margin-top: 8px;
+    }
+
+    /* ── PD special KPIs ── */
+    .pd-kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    /* ── Detail table ── */
+    .table-wrap {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: auto;
+      box-shadow: var(--shadow);
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead tr { background: #f9f9f9; }
+    th { text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); border-bottom: 1px solid var(--border); white-space: nowrap; }
+    td { padding: 9px 14px; border-bottom: 1px solid #f0f0f0; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafafa; }
+    .pill { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .pill-ok { background: #e6f7ed; color: var(--ok); }
+    .pill-intervened { background: #fff3e0; color: var(--intervened); }
+    .pill-downgraded { background: #fde8ea; color: var(--downgraded); }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      font-size: 11px;
+      color: #aaa;
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+    }
+
+    /* ── Back to top ── */
+    .back-top {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--yellow);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,.15);
+    }
+
+    @media (max-width: 900px) {
+      .chart-grid { grid-template-columns: 1fr; }
+      .chart-grid-2 { grid-template-columns: 1fr; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .shipment-metrics { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">mercado<span>libre</span>flex</div>
+  <div class="header-sub">Panel Mensajeros · Moderación 2026 · GM MLM</div>
+</header>
+
+<nav>
+  <a class="active" href="#overview">Vista General</a>
+  <a href="#transportistas">Transportistas</a>
+  <a href="#perfect-delivery">Perfect Delivery</a>
+  <a href="#detalles">Detalles</a>
+</nav>
+
+<main>
+
+  <!-- ── FILTROS ── -->
+  <div class="filters">
+    <div class="filter-group">
+      <label>Mes</label>
+      <select id="f-mes">
+        <option value="">Todos</option>
+        <option value="abr">Abril 2026</option>
+        <option value="may" selected>Mayo 2026</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Semana</label>
+      <select id="f-sem">
+        <option value="">Todas</option>
+        <optgroup label="── Abril 2026 ──">
+          <option>Sem 1 (06–12/04)</option>
+          <option>Sem 2 (13–19/04)</option>
+          <option>Sem 3 (20–26/04)</option>
+          <option>Sem 4 (27/04–03/05)</option>
+        </optgroup>
+        <optgroup label="── Mayo 2026 ──">
+          <option>Sem 5 (04–10/05)</option>
+          <option>Sem 6 (11–17/05)</option>
+          <option>Sem 7 (18–24/05)</option>
+          <option>Sem 8 (25–31/05)</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Segmento</label>
+      <select id="f-seg">
+        <option value="">Todos</option>
+        <option value="great">Muy Buenos (≥97%)</option>
+        <option value="good">Buenos (90–97%)</option>
+        <option value="bad">Muy Malos (&lt;90%)</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Estado</label>
+      <select id="f-estado">
+        <option value="">Todos</option>
+        <option value="ok">OK</option>
+        <option value="int">Intervened</option>
+        <option value="down">Downgraded</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Transportista</label>
+      <select id="f-carrier">
+        <option value="">Todas</option>
+        <option value="none">Sin transportista</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="warning-box">
+    ⚠️ <strong>Atención:</strong> Zonas en <em>downgraded</em> sin actividad reciente <strong>no generan nuevo registro</strong> —
+    el estado permanece vigente aunque no aparezca en el período reciente.
+    Dashboard con datos de muestra MLM · Las queries BigQuery adaptadas están disponibles en cada sección (▶ Ver query).
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SECTION: VISTA GENERAL
+       ══════════════════════════════════════════════════════════ -->
+  <div id="overview">
+    <div class="section-title">Indicadores Principales</div>
+
+    <div class="kpi-grid">
+      <div class="kpi highlight">
+        <div class="label">Total Sellers</div>
+        <div class="value">1 704</div>
+        <div class="sub">moderados MLM</div>
+      </div>
+      <div class="kpi ok-card">
+        <div class="label">OK</div>
+        <div class="value">1 578</div>
+        <span class="badge badge-ok">92.6%</span>
+      </div>
+      <div class="kpi warn-card">
+        <div class="label">Intervened</div>
+        <div class="value">1</div>
+        <span class="badge badge-warn">0.1%</span>
+      </div>
+      <div class="kpi bad-card">
+        <div class="label">Downgraded</div>
+        <div class="value">125</div>
+        <span class="badge badge-bad">7.3%</span>
+      </div>
+      <div class="kpi warn-card">
+        <div class="label">⚠️ En Cola de Intervención</div>
+        <div class="value">—</div>
+        <span class="badge badge-warn">sin datos</span>
+      </div>
+      <div class="kpi bad-card">
+        <div class="label">% Con Atraso (PD)</div>
+        <div class="value">7.5%</div>
+        <span class="badge badge-bad">del total envíos</span>
+      </div>
+      <div class="kpi ok-card">
+        <div class="label">Sellers Muy Buenos</div>
+        <div class="value">88.6%</div>
+        <div class="sub">≥97% performance</div>
+      </div>
+      <div class="kpi highlight">
+        <div class="label">📦 Perfect Delivery</div>
+        <div class="value">90.0%</div>
+        <div class="sub">de los envíos entregados</div>
+      </div>
+      <div class="kpi highlight">
+        <div class="label">🏆 Mejor Carrier</div>
+        <div class="value" style="font-size:18px;margin-top:4px;">RAPIBOY</div>
+        <div class="sub">95.4% PD</div>
+      </div>
+    </div>
+
+    <!-- Distribución & Segmentación -->
+    <div class="section-title">Distribución &amp; Segmentación</div>
+
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Estado de los Nodos — MLM</h3>
+        <canvas id="chartNodos"></canvas>
+        <div style="display:flex;gap:12px;margin-top:10px;font-size:11px;">
+          <span style="color:var(--ok)">● OK</span>
+          <span style="color:var(--intervened)">● Intervened</span>
+          <span style="color:var(--downgraded)">● Downgraded</span>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Sellers por Segmento × Estado</h3>
+        <canvas id="chartSegmento"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Envíos Incorrectos por Motivo</h3>
+        <canvas id="chartMotivos"></canvas>
+      </div>
+    </div>
+
+    <!-- Métricas de Envíos Incorrectos -->
+    <div class="section-title">Métricas de Envíos Incorrectos</div>
+
+    <div class="shipment-metrics">
+      <div class="kpi">
+        <div class="label">Total Envíos (Flex)</div>
+        <div class="value">106 322</div>
+        <div class="sub">últimos 30 días</div>
+      </div>
+      <div class="kpi ok-card">
+        <div class="label">Perfect Delivery</div>
+        <div class="value">98 307</div>
+        <span class="badge badge-ok">92.5%</span>
+      </div>
+      <div class="kpi bad-card">
+        <div class="label">Con Atraso</div>
+        <div class="value">8 015</div>
+        <span class="badge badge-bad">7.5%</span>
+      </div>
+      <div class="kpi">
+        <div class="label">RAPIBOY</div>
+        <div class="value">41 709</div>
+        <div class="sub">95.4% PD</div>
+      </div>
+      <div class="kpi">
+        <div class="label">PACKATELAS</div>
+        <div class="value">3 120</div>
+        <div class="sub">95.0% PD</div>
+      </div>
+    </div>
+
+    <div class="chart-grid-2">
+      <div class="chart-card">
+        <h3>Envíos Diarios — Total vs. Incorrectos</h3>
+        <canvas id="chartDiarios"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Breakdown de Motivos por Día</h3>
+        <canvas id="chartMotivoDia"></canvas>
+      </div>
+    </div>
+
+    <div class="info-box">
+      ℹ️ <strong>Nuevos motivos 2026:</strong> <code>REASON = 'cancelled_by_buyer'</code> — Cancelado por buyer con delay ·
+      <code>REASON = 'buyer_rescheduled'</code> — Reprogramado por buyer ·
+      <code>REASON = 'receiver_absent'</code> — Buyer absent con delay.<br/>
+      Excluido: <code>AFFECTED_FLAG = TRUE</code> (SHP Blindados).
+      <details style="margin-top:8px;">
+        <summary style="cursor:pointer;font-weight:600;color:#1565c0;">▶ Ver query BigQuery — QUERY_SELLERS (MLM)</summary>
+        <pre style="margin-top:8px;background:#f5f5f5;border-radius:4px;padding:12px;overflow:auto;font-size:11px;line-height:1.5;">WITH carrier_per_seller AS (
+  SELECT
+    sla.SHP_SENDER_ID,
+    t.CARRIER_NAME,
+    COUNT(*) AS cnt,
+    ROW_NUMBER() OVER (
+      PARTITION BY sla.SHP_SENDER_ID
+      ORDER BY COUNT(*) DESC
+    ) AS rn
+  FROM `meli-bi-data.WHOWNER.BT_SOE_SHIPMENT_SELLER_SLA` sla
+  JOIN `meli-bi-data.WHOWNER.LK_SHP_FLEX_TRANSPORTATION` t
+    ON sla.SHP_SHIPMENT_ID = t.SHP_SHIPMENT_ID
+  WHERE sla.SITE_ID = 'MLM'                          -- ← MLM
+    AND DATE(sla.REAL_DATE) >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
+    AND t.SIT_SITE_ID = 'MLM'                        -- ← MLM
+  GROUP BY 1, 2
+)
+SELECT
+  p.SHP_SENDER_ID                              AS seller_id,
+  p.SHP_EXPECTED_ORIGIN_NODE_ID                AS nodo,
+  p.SHP_STATUS                                 AS status,
+  SAFE_CAST(p.SHP_FIRST_EFFECTIVENESS AS FLOAT64) AS perf,
+  c.CARRIER_NAME                               AS carrier
+FROM `meli-bi-data.WHOWNER.BT_SOE_SELLER_PERFORMANCE_INCENTIVES` p
+LEFT JOIN carrier_per_seller c
+  ON p.SHP_SENDER_ID = c.SHP_SENDER_ID AND c.rn = 1
+WHERE p.SHP_SITE          = 'MLM'                    -- ← MLM
+  AND p.SHP_PICKING_TYPE_ID = 'self_service'
+  AND SAFE_CAST(p.SHP_ANALYZED_SHIPMENTS AS INT64) > 0
+  AND DATE(p.SHP_RUN_DATE) >= DATE_SUB(CURRENT_DATE(), INTERVAL 2 DAY)
+ORDER BY p.SHP_SENDER_ID
+LIMIT 5000</pre>
+      </details>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SECTION: TRANSPORTISTAS
+       ══════════════════════════════════════════════════════════ -->
+  <div id="transportistas">
+    <div class="section-title">Sellers por Transportista · MLM</div>
+
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Sellers por Transportista — Status</h3>
+        <canvas id="chartCarrierStatus"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>% Downgraded por Transportista</h3>
+        <canvas id="chartCarrierDown"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Distribución de Sellers por Transportista — Stacked (OK / Intervened / Downgraded)</h3>
+        <canvas id="chartCarrierStacked"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin-bottom:16px;">
+      <div class="inline-select">
+        <span>Transportista:</span>
+        <select>
+          <option>Todas (consolidado)</option>
+          <option>Estafeta</option>
+          <option>FedEx</option>
+          <option>J&amp;T Express</option>
+          <option>DHL</option>
+          <option>Paquetexpress</option>
+        </select>
+      </div>
+      <h3>Evolución Semanal por Franja de SLA</h3>
+      <canvas id="chartSlaEvol" style="max-height:240px;"></canvas>
+    </div>
+
+    <div class="info-box">
+      ℹ️ <strong>Fuente BigQuery:</strong> <code>LK_SHP_FLEX_TRANSPORTATION.CARRIER_NAME</code> vinculado via
+      <code>BT_SOE_SHIPMENT_SELLER_SLA.SHP_SHIPMENT_ID = LK_SHP_FLEX_TRANSPORTATION.SHP_SHIPMENT_ID</code> ·
+      Sellers sin transportista (~25%) usan recolección u otros modelos logísticos.
+      <details style="margin-top:8px;">
+        <summary style="cursor:pointer;font-weight:600;color:#1565c0;">▶ Ver query BigQuery — QUERY_CARRIER_WEEKLY (MLM)</summary>
+        <pre style="margin-top:8px;background:#f5f5f5;border-radius:4px;padding:12px;overflow:auto;font-size:11px;line-height:1.5;">WITH raw_counts AS (
+  SELECT
+    sla.SHP_SENDER_ID,
+    t.CARRIER_NAME,
+    DATE_TRUNC(DATE(sla.REAL_DATE), WEEK(MONDAY)) AS week_start,
+    COUNT(*) AS cnt
+  FROM `meli-bi-data.WHOWNER.BT_SOE_SHIPMENT_SELLER_SLA` sla
+  JOIN `meli-bi-data.WHOWNER.LK_SHP_FLEX_TRANSPORTATION` t
+    ON sla.SHP_SHIPMENT_ID = t.SHP_SHIPMENT_ID
+  WHERE sla.SITE_ID = 'MLM'                          -- ← MLM
+    AND DATE(sla.REAL_DATE) >= DATE_SUB(CURRENT_DATE(), INTERVAL 28 DAY)
+    AND t.SIT_SITE_ID = 'MLM'                        -- ← MLM
+  GROUP BY 1, 2, 3
+),
+carrier_per_seller AS (
+  SELECT SHP_SENDER_ID, CARRIER_NAME, week_start,
+    ROW_NUMBER() OVER (PARTITION BY SHP_SENDER_ID, week_start ORDER BY cnt DESC) AS rn
+  FROM raw_counts
+),
+base AS (
+  SELECT
+    p.SHP_SENDER_ID,
+    SAFE_CAST(p.SHP_FIRST_EFFECTIVENESS AS FLOAT64) AS perf,
+    c.CARRIER_NAME,
+    c.week_start
+  FROM `meli-bi-data.WHOWNER.BT_SOE_SELLER_PERFORMANCE_INCENTIVES` p
+  JOIN carrier_per_seller c
+    ON p.SHP_SENDER_ID = c.SHP_SENDER_ID AND c.rn = 1
+  WHERE p.SHP_SITE            = 'MLM'                -- ← MLM
+    AND p.SHP_PICKING_TYPE_ID = 'self_service'
+    AND SAFE_CAST(p.SHP_ANALYZED_SHIPMENTS AS INT64) > 0
+    AND DATE(p.SHP_RUN_DATE) >= DATE_SUB(CURRENT_DATE(), INTERVAL 28 DAY)
+)
+SELECT
+  COALESCE(CARRIER_NAME, '(Sin carrier)')  AS carrier,
+  CAST(week_start AS STRING)               AS week_start,
+  COUNTIF(perf >= 97)                      AS muy_buenos,
+  COUNTIF(perf >= 90 AND perf &lt; 97)       AS buenos,
+  COUNTIF(perf &lt; 90)                       AS muy_malos,
+  COUNT(*)                                 AS total
+FROM base
+GROUP BY 1, 2
+ORDER BY 1, 2</pre>
+      </details>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SECTION: PERFECT DELIVERY
+       ══════════════════════════════════════════════════════════ -->
+  <div id="perfect-delivery">
+    <div class="section-title">Perfect Delivery por Transportista · MLM · Mayo 2026</div>
+
+    <div class="pd-kpis">
+      <div class="kpi highlight">
+        <div class="label">🎯 Meta MLM</div>
+        <div class="value">97.0%</div>
+        <div class="sub">referencia nacional</div>
+      </div>
+      <div class="kpi bad-card">
+        <div class="label">📦 Perfecty</div>
+        <div class="value">90.0%</div>
+        <div class="sub">% de los envíos</div>
+      </div>
+      <div class="kpi bad-card">
+        <div class="label">🌙 Correcty</div>
+        <div class="value">91.2%</div>
+        <div class="sub">pre-21h descontado</div>
+      </div>
+      <div class="kpi bad-card">
+        <div class="label">📉 Gap vs Meta</div>
+        <div class="value">−7.0%</div>
+        <div class="sub">vs 97% meta</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Total Envíos</div>
+        <div class="value">108 231</div>
+        <div class="sub">últimos 30 días</div>
+      </div>
+      <div class="kpi bad-card">
+        <div class="label">✅ Perfect Delivery</div>
+        <div class="value">97 401</div>
+        <span class="badge badge-bad">90.0%</span>
+      </div>
+      <div class="kpi bad-card">
+        <div class="label">🕐 Con Atraso</div>
+        <div class="value">8 109</div>
+        <span class="badge badge-bad">7.5%</span>
+      </div>
+      <div class="kpi warn-card">
+        <div class="label">🚪 Ausencia Receptor</div>
+        <div class="value">2 866</div>
+        <span class="badge badge-warn">2.6%</span>
+      </div>
+      <div class="kpi warn-card">
+        <div class="label">🌙 Ausencia post-21h</div>
+        <div class="value">1 457</div>
+        <span class="badge badge-warn">1.3%</span>
+      </div>
+      <div class="kpi highlight">
+        <div class="label">Mejor Carrier</div>
+        <div class="value" style="font-size:16px;margin-top:4px;">RAPIBOY</div>
+        <div class="sub">91.8% PD · 94.0% Correcty</div>
+      </div>
+    </div>
+
+    <div class="chart-grid-2">
+      <div class="chart-card">
+        <h3>Evolución Semanal · PD Real vs PD excluyendo Ausencia 21h+</h3>
+        <canvas id="chartPdEvol"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Evolución de Fallas por Motivo · Histórico Semanal</h3>
+        <canvas id="chartFallas"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin-bottom:8px;">
+      <h3>Detalle por Transportista</h3>
+      <div class="table-wrap" style="margin-top:8px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Carrier</th>
+              <th>Total Envíos</th>
+              <th>Perfect Delivery</th>
+              <th>PD%</th>
+              <th>Correcty%</th>
+              <th>Con Atraso</th>
+              <th>Aus. Receptor</th>
+              <th>Gap vs Meta (97%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>RAPIBOY</strong></td>
+              <td>42 434</td>
+              <td>38 949</td>
+              <td><strong style="color:var(--intervened)">91.8%</strong></td>
+              <td>94.0%</td>
+              <td>1 947</td>
+              <td>1 637</td>
+              <td style="color:var(--downgraded)">−5.2%</td>
+            </tr>
+            <tr>
+              <td><strong>PACKATELAS</strong></td>
+              <td>3 228</td>
+              <td>2 955</td>
+              <td><strong style="color:var(--intervened)">91.5%</strong></td>
+              <td>93.9%</td>
+              <td>159</td>
+              <td>123</td>
+              <td style="color:var(--downgraded)">−5.5%</td>
+            </tr>
+            <tr>
+              <td><strong>MOBIICLUB</strong></td>
+              <td>992</td>
+              <td>906</td>
+              <td><strong style="color:var(--intervened)">91.3%</strong></td>
+              <td>92.6%</td>
+              <td>62</td>
+              <td>28</td>
+              <td style="color:var(--downgraded)">−5.7%</td>
+            </tr>
+            <tr>
+              <td><strong>MOOVA</strong></td>
+              <td>142</td>
+              <td>104</td>
+              <td><strong style="color:var(--downgraded)">73.2%</strong></td>
+              <td>73.8%</td>
+              <td>35</td>
+              <td>3</td>
+              <td style="color:var(--downgraded)">−23.8%</td>
+            </tr>
+            <tr>
+              <td><strong>(Sin carrier)</strong></td>
+              <td>61 430</td>
+              <td>54 484</td>
+              <td><strong style="color:var(--downgraded)">88.7%</strong></td>
+              <td>89.2%</td>
+              <td>5 904</td>
+              <td>1 075</td>
+              <td style="color:var(--downgraded)">−8.3%</td>
+            </tr>
+            <tr>
+              <td><strong>PIBOX</strong></td>
+              <td>5</td>
+              <td>3</td>
+              <td><strong style="color:var(--downgraded)">60.0%</strong></td>
+              <td>60.0%</td>
+              <td>2</td>
+              <td>0</td>
+              <td style="color:var(--downgraded)">−37.0%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="info-box">
+      ℹ️ <strong>Fuente BigQuery:</strong> <code>DM_SHP_FLEX_SUMMARY</code> + <code>LK_SHP_FLEX_SHIPMENT_EVENTS</code> ·
+      Perfect Delivery = sin ausencia de receptor + sin atraso · <code>SHP_PICKING_TYPE_ID = 'self_service'</code><br/>
+      ⚠️ <strong>Ajuste de timezone MLM:</strong> México usa <strong>CST (UTC−6)</strong>. Las 21h locales = 03h UTC del día siguiente.
+      La lógica de ausencia nocturna usa <code>DATETIME(e.SHP_CHECKPOINT_DATETIME, 'America/Mexico_City')</code> para evitar errores de offset.
+      <details style="margin-top:8px;">
+        <summary style="cursor:pointer;font-weight:600;color:#1565c0;">▶ Ver query BigQuery — QUERY_PERFECT_DELIVERY (MLM)</summary>
+        <pre style="margin-top:8px;background:#f5f5f5;border-radius:4px;padding:12px;overflow:auto;font-size:11px;line-height:1.5;">WITH visitas AS (
+  SELECT
+    s.SIT_SITE_ID                                    AS site,
+    s.SHP_SHIPMENT_ID,
+    s.SHP_LEAD_TIME_DEVIATION_TYPE,
+    t.CARRIER_NAME,
+    COUNT(DISTINCT CASE
+      WHEN e.SHP_SUB_STATUS = 'receiver_absent'
+      THEN e.SHP_SHIPMENT_ID END)                    AS visitas_fallidas,
+    -- MLM: 21h hora local Mexico_City = EXTRACT(HOUR FROM DATETIME(ts, 'America/Mexico_City')) >= 21
+    COUNT(DISTINCT CASE
+      WHEN e.SHP_SUB_STATUS = 'receiver_absent'
+        AND EXTRACT(HOUR FROM DATETIME(e.SHP_CHECKPOINT_DATETIME, 'America/Mexico_City')) >= 21
+      THEN e.SHP_SHIPMENT_ID END)                    AS visitas_fallidas_pos21h,
+    MAX(CASE WHEN COALESCE(s.REASON,'') = 'buyer_rescheduled' THEN 1 ELSE 0 END) AS is_repro_buyer
+  FROM `meli-bi-data.WHOWNER.DM_SHP_FLEX_SUMMARY` s
+  LEFT JOIN `meli-bi-data.WHOWNER.LK_SHP_FLEX_SHIPMENT_EVENTS` e
+    ON s.SHP_SHIPMENT_ID = e.SHP_SHIPMENT_ID
+  LEFT JOIN `meli-bi-data.WHOWNER.LK_SHP_FLEX_TRANSPORTATION` t
+    ON s.SHP_SHIPMENT_ID = t.SHP_SHIPMENT_ID
+  WHERE s.SHP_PICKING_TYPE_ID = 'self_service'
+    AND s.SIT_SITE_ID         = 'MLM'               -- ← MLM
+    AND DATE(s.SHP_DATETIME_HANDLING_ID)
+          BETWEEN DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY) AND CURRENT_DATE()
+  GROUP BY 1, 2, 3, 4
+)
+SELECT
+  COALESCE(CARRIER_NAME, '(Sin carrier)')            AS carrier,
+  COUNT(*)                                            AS total_envios,
+  COUNTIF(visitas_fallidas = 0
+    AND SHP_LEAD_TIME_DEVIATION_TYPE != 'DELAY'
+    AND is_repro_buyer = 0)                           AS perfect_delivery,
+  COUNTIF(SHP_LEAD_TIME_DEVIATION_TYPE = 'DELAY')    AS con_atraso,
+  COUNTIF(visitas_fallidas > 0)                       AS ausencia_receptor,
+  COUNTIF(visitas_fallidas_pos21h > 0)                AS ausencia_receptor_pos21h,
+  COUNTIF(is_repro_buyer = 1)                         AS repro_buyer,
+  ROUND(
+    COUNTIF(visitas_fallidas = 0
+      AND SHP_LEAD_TIME_DEVIATION_TYPE != 'DELAY')
+    / COUNT(*) * 100, 1)                              AS pct_perfect_delivery
+FROM visitas
+GROUP BY 1
+ORDER BY total_envios DESC
+LIMIT 50</pre>
+      </details>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SECTION: DETALLES
+       ══════════════════════════════════════════════════════════ -->
+  <div id="detalles">
+    <div class="section-title">Detalle por Seller × Nodo</div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Seller ID</th>
+            <th>Nodo</th>
+            <th>Estado</th>
+            <th>Segmento</th>
+            <th>Envíos</th>
+            <th>% Incorrectos</th>
+            <th>Transportista</th>
+            <th>PD%</th>
+            <th>Última RO</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyDetalles"></tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Moderación 2026 · MLM · Fuente: <code>meli-bi-data.WHOWNER.BT_SOE_SELLER_PERFORMANCE_INCENTIVES</code> &amp; <code>BT_SOE_SHIPMENT_SELLER_SLA</code> ·
+  Datos de muestra — sustituye via queries BigQuery con <code>SHP_SITE = 'MLM'</code> · RO nodo: 27/04/2026
+</footer>
+
+<button class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// ─────────────────────────────────────────────
+// Palette
+// ─────────────────────────────────────────────
+const OK   = '#00a650';
+const INT  = '#f5a623';
+const DOWN = '#d0021b';
+const BLUE = '#2196f3';
+const YEL  = '#FFE600';
+const MUTED = '#999';
+
+const WEEKS = ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6', 'Sem 7', 'Sem 8'];
+const WEEKS_DATES = [
+  'Sem 1\n06–12/04', 'Sem 2\n13–19/04', 'Sem 3\n20–26/04', 'Sem 4\n27/04–03/05',
+  'Sem 5\n04–10/05', 'Sem 6\n11–17/05', 'Sem 7\n18–24/05', 'Sem 8\n25–31/05'
+];
+
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+Chart.defaults.font.size = 11;
+Chart.defaults.color = '#666';
+
+// ─────────────────────────────────────────────
+// 1. Estado de los Nodos (Doughnut)
+// ─────────────────────────────────────────────
+new Chart(document.getElementById('chartNodos'), {
+  type: 'doughnut',
+  data: {
+    labels: ['OK', 'Intervened', 'Downgraded'],
+    datasets: [{ data: [1578, 1, 125], backgroundColor: [OK, INT, DOWN], borderWidth: 2, borderColor: '#fff' }]
+  },
+  options: {
+    plugins: { legend: { display: false },
+      tooltip: { callbacks: { label: c => ` ${c.label}: ${c.raw.toLocaleString('es-MX')} sellers` } }
+    },
+    cutout: '62%'
+  }
+});
+
+// ─────────────────────────────────────────────
+// 2. Sellers por Segmento × Estado (Stacked Bar)
+// ─────────────────────────────────────────────
+new Chart(document.getElementById('chartSegmento'), {
+  type: 'bar',
+  data: {
+    labels: ['Muy Buenos\n(≥97%)', 'Buenos\n(90–97%)', 'Muy Malos\n(<90%)'],
+    datasets: [
+      { label: 'OK',          data: [1510, 4, 64],  backgroundColor: OK  },
+      { label: 'Intervened',  data: [0, 1, 0],      backgroundColor: INT },
+      { label: 'Downgraded',  data: [0, 5, 120],   backgroundColor: DOWN }
+    ]
+  },
+  options: {
+    scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } },
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 8 } } }
+  }
+});
+
+// ─────────────────────────────────────────────
+// 3. Envíos Incorrectos por Motivo (Pie)
+// ─────────────────────────────────────────────
+new Chart(document.getElementById('chartMotivos'), {
+  type: 'pie',
+  data: {
+    labels: ['Con Atraso', 'Buyer Absent (N/D)', 'Repro Buyer (N/D)'],
+    datasets: [{ data: [8015, 0, 0], backgroundColor: [DOWN, INT, '#9c27b0'], borderWidth: 2, borderColor: '#fff' }]
+  },
+  options: {
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 8 } } }
+  }
+});
+
+// ─────────────────────────────────────────────
+// 4. Envíos Diarios — Total vs. Incorrectos
+// ─────────────────────────────────────────────
+const dias = ['L 18','M 19','X 20','J 21','V 22','S 23','D 24','L 25','M 26','X 27','J 28','V 29','S 30','D 31'];
+new Chart(document.getElementById('chartDiarios'), {
+  type: 'bar',
+  data: {
+    labels: dias,
+    datasets: [
+      { label: 'Total Envíos',       data: [2800,3100,3000,2950,3200,1800,1200,2900,3050,3100,2870,3300,1900,1050], backgroundColor: '#e3f2fd', yAxisID: 'y' },
+      { label: 'Incorrectos',        data: [235,260,250,240,268,152,101,243,256,260,241,277,160,88],               backgroundColor: DOWN, yAxisID: 'y' },
+      { label: '% Incorrectos',      data: [8.4,8.4,8.3,8.1,8.4,8.4,8.4,8.4,8.4,8.4,8.4,8.4,8.4,8.4],           type: 'line', borderColor: INT, backgroundColor: 'transparent', pointRadius: 3, yAxisID: 'y2' }
+    ]
+  },
+  options: {
+    scales: {
+      y:  { beginAtZero: true, title: { display: true, text: 'Envíos' } },
+      y2: { position: 'right', min: 0, max: 20, title: { display: true, text: '% Incorrectos' }, grid: { drawOnChartArea: false } }
+    },
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 8 } } }
+  }
+});
+
+// ─────────────────────────────────────────────
+// 5. Breakdown Motivos por Día (Stacked)
+// ─────────────────────────────────────────────
+new Chart(document.getElementById('chartMotivoDia'), {
+  type: 'bar',
+  data: {
+    labels: dias,
+    datasets: [
+      { label: 'Delay Seller', data: [121,134,128,124,138,78,52,125,131,134,124,143,82,45], backgroundColor: DOWN },
+      { label: 'Buyer Absent', data: [66,72,69,67,74,42,28,67,71,72,67,77,44,24],          backgroundColor: INT  },
+      { label: 'Repro Buyer',  data: [48,54,53,49,56,32,21,51,54,54,50,57,34,19],          backgroundColor: '#9c27b0' }
+    ]
+  },
+  options: {
+    scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } },
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 8 } } }
+  }
+});
+
+// ─────────────────────────────────────────────
+// 6. Carrier Status (Bar agrupado)
+// ─────────────────────────────────────────────
+const carriers = ['(Sin carrier)', 'RAPIBOY', 'PACKATELAS', 'MOBIICLUB', 'MOOVA'];
+new Chart(document.getElementById('chartCarrierStatus'), {
+  type: 'bar',
+  data: {
+    labels: carriers,
+    datasets: [
+      { label: 'OK',         data: [1232, 293, 37, 15, 1], backgroundColor: OK   },
+      { label: 'Intervened', data: [0,  0,  0,  1,  0],  backgroundColor: INT  },
+      { label: 'Downgraded', data: [111, 6, 3, 4, 1], backgroundColor: DOWN }
+    ]
+  },
+  options: {
+    scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } },
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 8 } } }
+  }
+});
+
+// ─────────────────────────────────────────────
+// 7. % Downgraded por Transportista (Horizontal bar)
+// ─────────────────────────────────────────────
+new Chart(document.getElementById('chartCarrierDown'), {
+  type: 'bar',
+  data: {
+    labels: carriers,
+    datasets: [{
+      label: '% Downgraded',
+      data: [8.3, 2.0, 7.5, 20.0, 50.0],
+      backgroundColor: [INT, OK, INT, DOWN, DOWN],
+      borderRadius: 4
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: c => ` ${c.raw}% downgraded` } }
+    },
+    scales: { x: { beginAtZero: true, max: 25, ticks: { callback: v => v + '%' } } }
+  }
+});
+
+// ─────────────────────────────────────────────
+// 8. Stacked por Transportista (Horizontal)
+// ─────────────────────────────────────────────
+new Chart(document.getElementById('chartCarrierStacked'), {
+  type: 'bar',
+  data: {
+    labels: carriers,
+    datasets: [
+      { label: 'OK',         data: [91.7, 98.0, 92.5, 75.0, 50.0], backgroundColor: OK   },
+      { label: 'Intervened', data: [0.0,  0.0,  0.0,  5.0,  0.0], backgroundColor: INT  },
+      { label: 'Downgraded', data: [8.3,  2.0,  7.5, 20.0, 50.0], backgroundColor: DOWN }
+    ]
+  },
+  options: {
+    indexAxis: 'y',
+    scales: {
+      x: { stacked: true, min: 0, max: 100, ticks: { callback: v => v + '%' } },
+      y: { stacked: true }
+    },
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 8 } } }
+  }
+});
+
+// ─────────────────────────────────────────────
+// 9. Evolución SLA semanal (Line)
+// ─────────────────────────────────────────────
+new Chart(document.getElementById('chartSlaEvol'), {
+  type: 'line',
+  data: {
+    labels: WEEKS,
+    datasets: [
+      { label: '≥97% (Muy Bueno)', data: [87.1,87.3,87.4,87.4,87.4,87.5,87.6,87.5], borderColor: OK,   backgroundColor: OK+'22',   fill: false, tension: .3 },
+      { label: '90–97% (Bueno)',   data: [4.4, 4.3, 4.3, 4.3, 4.3, 4.3, 4.3, 4.3], borderColor: INT,  backgroundColor: INT+'22',  fill: false, tension: .3 },
+      { label: '<90% (Muy Malo)',  data: [8.4, 8.4, 8.3, 8.3, 8.3, 8.2, 8.1, 8.2], borderColor: DOWN, backgroundColor: DOWN+'22', fill: false, tension: .3 }
+    ]
+  },
+  options: {
+    scales: { y: { beginAtZero: true, title: { display: true, text: 'Sellers (%)' } } },
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 8 } } }
+  }
+});
+
+// ─────────────────────────────────────────────
+// 10. PD Evolución (Line)
+// ─────────────────────────────────────────────
+new Chart(document.getElementById('chartPdEvol'), {
+  type: 'line',
+  data: {
+    labels: WEEKS,
+    datasets: [
+      { label: 'PD Real',                  data: [88.1, 88.9, 89.5, 90.2, 91.0, 91.3, 91.8, 91.3], borderColor: BLUE,  fill: false, tension: .3, pointRadius: 4 },
+      { label: 'PD excl. Ausencia 21h+',   data: [92.1, 92.5, 93.1, 93.8, 94.2, 94.5, 95.0, 94.7], borderColor: OK,    fill: false, tension: .3, pointRadius: 4 },
+      { label: 'Meta México (95%)',         data: [95,95,95,95,95,95,95,95],                         borderColor: DOWN,  borderDash: [6,3], fill: false, pointRadius: 0 }
+    ]
+  },
+  options: {
+    scales: { y: { min: 85, max: 100, ticks: { callback: v => v + '%' } } },
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 8 } } }
+  }
+});
+
+// ─────────────────────────────────────────────
+// 11. Fallas por Motivo (Stacked Line)
+// ─────────────────────────────────────────────
+new Chart(document.getElementById('chartFallas'), {
+  type: 'line',
+  data: {
+    labels: WEEKS,
+    datasets: [
+      { label: 'Delay Seller', data: [6.1, 5.9, 5.6, 5.4, 5.2, 5.0, 4.8, 5.1], borderColor: DOWN, backgroundColor: DOWN+'33', fill: true, tension: .3 },
+      { label: 'Buyer Absent', data: [2.2, 2.1, 2.0, 2.0, 1.9, 1.8, 1.8, 1.8], borderColor: INT,  backgroundColor: INT+'33',  fill: true, tension: .3 },
+      { label: 'Repro Buyer',  data: [1.5, 1.4, 1.4, 1.3, 1.3, 1.2, 1.2, 1.2], borderColor: '#9c27b0', backgroundColor: '#9c27b033', fill: true, tension: .3 }
+    ]
+  },
+  options: {
+    scales: { y: { beginAtZero: true, ticks: { callback: v => v + '%' } } },
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, padding: 8 } } }
+  }
+});
+
+// ─────────────────────────────────────────────
+// 12. Tabla de detalle (sample data)
+// ─────────────────────────────────────────────
+const sampleSellers = [
+  { id: '37941176', nodo: 'MXP379411761', estado: 'OK', seg: 'Muy Bueno', env: '—', pct: '—', carrier: 'RAPIBOY', pd: '100%', ro: '27/04/2026' },
+  { id: '67534508', nodo: 'MXP675345081', estado: 'OK', seg: 'Muy Bueno', env: '—', pct: '—', carrier: 'RAPIBOY', pd: '100%', ro: '27/04/2026' },
+  { id: '132699105', nodo: 'MXP1326991051', estado: 'OK', seg: 'Muy Bueno', env: '—', pct: '—', carrier: 'RAPIBOY', pd: '100%', ro: '27/04/2026' },
+  { id: '132699105', nodo: 'MXP1326991051', estado: 'Downgraded', seg: 'Muy Malo', env: '—', pct: '—', carrier: 'RAPIBOY', pd: '50%', ro: '27/04/2026' },
+  { id: '146128260', nodo: 'MXP1461282601', estado: 'OK', seg: 'Muy Bueno', env: '—', pct: '—', carrier: 'RAPIBOY', pd: '100%', ro: '27/04/2026' },
+  { id: '165614678', nodo: 'MXP1656146781', estado: 'OK', seg: 'Muy Bueno', env: '—', pct: '—', carrier: 'RAPIBOY', pd: '100%', ro: '27/04/2026' },
+  { id: '165614678', nodo: 'MXP1656146783', estado: 'OK', seg: 'Muy Bueno', env: '—', pct: '—', carrier: 'RAPIBOY', pd: '100%', ro: '27/04/2026' },
+];
+
+const pillClass = { OK: 'pill-ok', Intervened: 'pill-intervened', Downgraded: 'pill-downgraded' };
+const tbody = document.getElementById('tbodyDetalles');
+tbody.innerHTML = sampleSellers.map(s => `
+  <tr>
+    <td><code>${s.id}</code></td>
+    <td>${s.nodo}</td>
+    <td><span class="pill ${pillClass[s.estado]}">${s.estado}</span></td>
+    <td>${s.seg}</td>
+    <td>${s.env.toLocaleString('es-MX')}</td>
+    <td>${s.pct}</td>
+    <td>${s.carrier}</td>
+    <td>${s.pd}</td>
+    <td>${s.ro}</td>
+  </tr>
+`).join('');
+
+// ─────────────────────────────────────────────
+// Smooth scroll para nav tabs
+// ─────────────────────────────────────────────
+document.querySelectorAll('nav a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.querySelectorAll('nav a').forEach(x => x.classList.remove('active'));
+    a.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
