@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Moderação 2026 · Mensajeiras Flex — MLB</title>
+  <title>Moderação 2026 · Mensajeiras Flex — MLM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js" crossorigin="anonymous"></script>
@@ -501,7 +501,7 @@
   <div class="logo">mercado<strong>livre</strong><span class="logo-flex">flex</span></div>
   <div class="header-sep"></div>
   <span class="header-subtitle">Painel Mensajeiras · Moderação 2026 · GM</span>
-  <span class="header-badge">MLB</span>
+  <span class="header-badge">MLM</span>
 </header>
 
 <!-- ══ TABS NAV ══════════════════════════════════════════════════ -->
@@ -579,7 +579,7 @@
       <span>
         <strong>Atenção:</strong> Zonas em <em>downgraded</em> sem atividade recente <strong>não geram novo registro</strong> —
         o estado permanece vigente mesmo sem aparecer no período recente.
-        Dashboard com dados de amostra MLB · Substitua pelas queries BigQuery com <code>SHP_SITE = 'MLB'</code>.
+        Dashboard com dados de amostra MLB · Substitua pelas queries BigQuery com <code>SHP_SITE = 'MLM'</code>.
       </span>
     </div>
 
@@ -588,7 +588,7 @@
       <div class="kpi-card c-blue">
         <div class="kpi-label">Total Sellers</div>
         <div class="kpi-value c-blue" id="kpi-total">—</div>
-        <div class="kpi-sub">moderados MLB</div>
+        <div class="kpi-sub">moderados MLM</div>
       </div>
       <div class="kpi-card c-green">
         <div class="kpi-label"><span class="kpi-dot" style="background:var(--green)"></span>OK</div>
@@ -635,7 +635,7 @@
     <div class="section-title">Distribuição &amp; segmentação</div>
     <div class="chart-grid chart-grid-3">
       <div class="chart-card">
-        <h3>Estado dos Nodos — MLB</h3>
+        <h3>Estado dos Nodos — MLM</h3>
         <canvas id="chart-status"></canvas>
         <div class="chart-legend">
           <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>OK</div>
@@ -712,7 +712,7 @@
 
   <!-- ── TAB: TRANSPORTADORAS ──────────────────────────────────── -->
   <div class="tab-panel" id="tab-transportadoras">
-    <div class="section-title">Sellers por Transportadora · MLB</div>
+    <div class="section-title">Sellers por Transportadora · MLM</div>
     <div class="kpi-grid" id="kpi-carrier-grid" style="margin-bottom:var(--gap)"></div>
 
     <div class="chart-grid chart-grid-2">
@@ -761,13 +761,13 @@
 
   <!-- ── TAB: PERFECT DELIVERY ───────────────────────────────────── -->
   <div class="tab-panel" id="tab-perfect-delivery">
-    <div class="section-title">Perfect Delivery por Transportadora · MLB · Maio 2026</div>
+    <div class="section-title">Perfect Delivery por Transportadora · MLM · Maio 2026</div>
 
     <!-- KPIs globais -->
     <div class="kpi-grid" style="margin-bottom:var(--gap)">
       <!-- Meta + PD Real + Gap -->
       <div class="kpi-card" style="border-top:3px solid #3483FA;background:linear-gradient(135deg,#F0F6FF,#E8F0FE)">
-        <div class="kpi-label" style="color:#1A4DB3">🎯 Meta Brasil</div>
+        <div class="kpi-label" style="color:#1A4DB3">🎯 Meta México</div>
         <div class="kpi-value" id="pd-meta" style="color:#3483FA">97.0%</div>
         <div class="kpi-sub" style="color:#1A4DB3">referência nacional</div>
       </div>
@@ -864,7 +864,7 @@
 
 <!-- ══ FOOTER ════════════════════════════════════════════════════ -->
 <footer class="page-footer page-content">
-  Moderação 2026 · MLB · Fonte:
+  Moderação 2026 · MLM · Fonte:
   <code>meli-bi-data.WHOWNER.BT_SOE_SELLER_PERFORMANCE_INCENTIVES</code> &amp;
   <code>BT_SOE_SHIPMENT_SELLER_SLA</code> ·
   Dados de amostra — substitua via queries BigQuery · RO nodo: 27/04/2026
@@ -1334,7 +1334,7 @@ class Dashboard {
 
   /* persist filters */
   _saveState() {
-    localStorage.setItem('mod2026_mlb_v1', JSON.stringify({
+    localStorage.setItem('mod2026_mlm_v1', JSON.stringify({
       month:   document.getElementById('f-month').value,
       week:    document.getElementById('f-week').value,
       seg:     document.getElementById('f-seg').value,
@@ -1344,7 +1344,7 @@ class Dashboard {
   }
   _restoreState() {
     try {
-      const s = JSON.parse(localStorage.getItem('mod2026_mlb_v1') || '{}');
+      const s = JSON.parse(localStorage.getItem('mod2026_mlm_v1') || '{}');
       if (s.month)   document.getElementById('f-month').value   = s.month;
       if (s.week)    document.getElementById('f-week').value    = s.week;
       if (s.seg)     document.getElementById('f-seg').value     = s.seg;
@@ -2339,12 +2339,12 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     const panelId = 'tab-' + btn.dataset.tab;
     const panel = document.getElementById(panelId);
     if (panel) panel.classList.add('active');
-    localStorage.setItem('mod2026_mlb_tab', btn.dataset.tab);
+    localStorage.setItem('mod2026_mlm_tab', btn.dataset.tab);
   });
 });
 
 /* restore active tab */
-const savedTab = localStorage.getItem('mod2026_mlb_tab');
+const savedTab = localStorage.getItem('mod2026_mlm_tab');
 if (savedTab) {
   const btn = document.querySelector(`.tab-btn[data-tab="${savedTab}"]`);
   if (btn) btn.click();
