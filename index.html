@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Moderación 2026 · Mensajeros Flex — MLM</title>
+  <title>Moderação 2026 · Mensajeiras Flex — MLB</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js" crossorigin="anonymous"></script>
@@ -500,27 +500,27 @@
 <header class="site-header">
   <div class="logo">mercado<strong>livre</strong><span class="logo-flex">flex</span></div>
   <div class="header-sep"></div>
-  <span class="header-subtitle">Panel Mensajeros · Moderación 2026 · GM</span>
-  <span class="header-badge">MLM</span>
+  <span class="header-subtitle">Painel Mensajeiras · Moderação 2026 · GM</span>
+  <span class="header-badge">MLB</span>
 </header>
 
 <!-- ══ TABS NAV ══════════════════════════════════════════════════ -->
 <nav class="tabs-nav" id="tabs-nav">
-  <button class="tab-btn active" data-tab="overview">Vista General</button>
-  <button class="tab-btn"        data-tab="transportadoras">Transportistas</button>
+  <button class="tab-btn active" data-tab="overview">Visão Geral</button>
+  <button class="tab-btn"        data-tab="transportadoras">Transportadoras</button>
   <button class="tab-btn"        data-tab="perfect-delivery">Perfect Delivery</button>
-  <button class="tab-btn"        data-tab="detalhes">Detalles</button>
+  <button class="tab-btn"        data-tab="detalhes">Detalhes</button>
 </nav>
 
 <!-- ══ FILTER BAR ════════════════════════════════════════════════ -->
 <div class="filter-bar">
   <span class="filter-bar-label">Filtros:</span>
   <div class="filter-group">
-    <label for="f-month">Mes</label>
+    <label for="f-month">Mês</label>
     <select id="f-month" onchange="dash.applyFilters()">
       <option value="all">Todos</option>
       <option value="2026-04">Abril 2026</option>
-      <option value="2026-05" selected>Mayo 2026</option>
+      <option value="2026-05" selected>Maio 2026</option>
     </select>
   </div>
   <div class="filter-group">
@@ -545,9 +545,9 @@
     <label for="f-seg">Segmento</label>
     <select id="f-seg" onchange="dash.applyFilters()">
       <option value="all">Todos</option>
-      <option value="muito_bom">Muy Buenos (≥97%)</option>
-      <option value="bom">Buenos (90–97%)</option>
-      <option value="muito_ruim">Muy Malos (&lt;90%)</option>
+      <option value="muito_bom">Muito Bons (≥97%)</option>
+      <option value="bom">Bons (90–97%)</option>
+      <option value="muito_ruim">Muito Ruins (&lt;90%)</option>
     </select>
   </div>
   <div class="filter-group">
@@ -560,10 +560,10 @@
     </select>
   </div>
   <div class="filter-group">
-    <label for="f-carrier">Transportista</label>
+    <label for="f-carrier">Transportadora</label>
     <select id="f-carrier" onchange="dash.applyFilters()">
       <option value="all">Todas</option>
-      <option value="__null__">Sin transportista</option>
+      <option value="__null__">Sem transportadora</option>
     </select>
   </div>
 </div>
@@ -577,18 +577,18 @@
     <div class="alert-banner">
       <span class="alert-icon">⚠️</span>
       <span>
-        <strong>Atención:</strong> Zonas en <em>downgraded</em> sin actividad reciente <strong>no generan nuevo registro</strong> —
-        el estado permanece vigente aunque no aparezca en el período reciente.
-        Dashboard con datos reales MLM · Queries BigQuery con <code>SHP_SITE = 'MLM'</code>.
+        <strong>Atenção:</strong> Zonas em <em>downgraded</em> sem atividade recente <strong>não geram novo registro</strong> —
+        o estado permanece vigente mesmo sem aparecer no período recente.
+        Dashboard com dados de amostra MLB · Substitua pelas queries BigQuery com <code>SHP_SITE = 'MLB'</code>.
       </span>
     </div>
 
-    <div class="section-title">Indicadores principales</div>
+    <div class="section-title">Indicadores principais</div>
     <div class="kpi-grid">
       <div class="kpi-card c-blue">
         <div class="kpi-label">Total Sellers</div>
         <div class="kpi-value c-blue" id="kpi-total">—</div>
-        <div class="kpi-sub">moderados MLM</div>
+        <div class="kpi-sub">moderados MLB</div>
       </div>
       <div class="kpi-card c-green">
         <div class="kpi-label"><span class="kpi-dot" style="background:var(--green)"></span>OK</div>
@@ -611,31 +611,31 @@
         <div class="kpi-sub" id="kpi-risk-pct" style="color:#92400E">—</div>
       </div>
       <div class="kpi-card c-purple">
-        <div class="kpi-label">Envíos Incorrectos</div>
+        <div class="kpi-label">Envios Incorretos</div>
         <div class="kpi-value c-purple" id="kpi-inc">—</div>
         <div class="kpi-sub" id="kpi-inc-pct">—</div>
       </div>
       <div class="kpi-card c-yellow">
-        <div class="kpi-label">Buen Comportamiento</div>
+        <div class="kpi-label">Bom Comportamento</div>
         <div class="kpi-value" id="kpi-perf">—</div>
         <div class="kpi-sub">média do período</div>
       </div>
       <div class="kpi-card c-green" style="border-top-color:#00A650">
         <div class="kpi-label">📦 Perfecty</div>
         <div class="kpi-value c-green" id="kpi-pd-real">—</div>
-        <div class="kpi-sub" id="kpi-pd-real-sub">de los envíos entregados</div>
+        <div class="kpi-sub" id="kpi-pd-real-sub">dos envios entregues</div>
       </div>
       <div class="kpi-card c-purple" style="border-top-color:#9B59B6">
         <div class="kpi-label">🌙 Correcty</div>
         <div class="kpi-value c-purple" id="kpi-pd-pos21">—</div>
-        <div class="kpi-sub" id="kpi-pd-pos21-sub">pre-21h descontado</div>
+        <div class="kpi-sub" id="kpi-pd-pos21-sub">pré-21h desconsiderado</div>
       </div>
     </div>
 
-    <div class="section-title">Distribución &amp; Segmentación</div>
+    <div class="section-title">Distribuição &amp; segmentação</div>
     <div class="chart-grid chart-grid-3">
       <div class="chart-card">
-        <h3>Estado de los Nodos — MLM</h3>
+        <h3>Estado dos Nodos — MLB</h3>
         <canvas id="chart-status"></canvas>
         <div class="chart-legend">
           <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>OK</div>
@@ -653,20 +653,20 @@
         </div>
       </div>
       <div class="chart-card">
-        <h3>Envíos Incorrectos por Motivo</h3>
+        <h3>Envios Incorretos por Motivo</h3>
         <canvas id="chart-reasons"></canvas>
       </div>
     </div>
 
-    <div class="section-title">Métricas de envíos incorrectos</div>
+    <div class="section-title">Métricas de envios incorretos</div>
     <div class="kpi-grid" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr))">
       <div class="kpi-card c-blue">
-        <div class="kpi-label">Total Envíos</div>
+        <div class="kpi-label">Total Envios</div>
         <div class="kpi-value c-blue" id="kpi-env-total">—</div>
-        <div class="kpi-sub">período seleccionado</div>
+        <div class="kpi-sub">período selecionado</div>
       </div>
       <div class="kpi-card c-red">
-        <div class="kpi-label">Envíos Incorrectos</div>
+        <div class="kpi-label">Envios Incorretos</div>
         <div class="kpi-value c-red" id="kpi-env-inc">—</div>
         <div class="kpi-sub" id="kpi-env-inc-pct">—</div>
       </div>
@@ -689,11 +689,11 @@
 
     <div class="chart-grid chart-grid-2">
       <div class="chart-card">
-        <h3>Envíos Diarios — Total vs. Incorrectos</h3>
+        <h3>Envios Diários — Total vs. Incorretos</h3>
         <canvas id="chart-env-trend" style="max-height:250px"></canvas>
       </div>
       <div class="chart-card">
-        <h3>Breakdown de Motivos por Día</h3>
+        <h3>Breakdown de Motivos por Dia</h3>
         <canvas id="chart-env-breakdown" style="max-height:250px"></canvas>
       </div>
     </div>
@@ -701,34 +701,34 @@
     <div class="alert-banner" style="margin-top:0">
       <span class="alert-icon">ℹ️</span>
       <span>
-        <strong>Nuevos motivos 2026:</strong>
-        <code>REASON = 'cancelled_by_buyer'</code> — Cancelado por buyer con delay ·
+        <strong>Novos motivos 2026:</strong>
+        <code>REASON = 'cancelled_by_buyer'</code> — Cancelado por buyer com delay ·
         <code>REASON = 'buyer_rescheduled'</code> — Reprogramado por buyer ·
-        <code>REASON = 'receiver_absent'</code> — Buyer absent con delay.
-        Excluido: <code>AFFECTED_FLAG = TRUE</code> (SHP Blindados).
+        <code>REASON = 'receiver_absent'</code> — Buyer absent com delay.
+        Excluído: <code>AFFECTED_FLAG = TRUE</code> (SHP Blindados).
       </span>
     </div>
   </div>
 
   <!-- ── TAB: TRANSPORTADORAS ──────────────────────────────────── -->
   <div class="tab-panel" id="tab-transportadoras">
-    <div class="section-title">Sellers por Transportista · MLM</div>
+    <div class="section-title">Sellers por Transportadora · MLB</div>
     <div class="kpi-grid" id="kpi-carrier-grid" style="margin-bottom:var(--gap)"></div>
 
     <div class="chart-grid chart-grid-2">
       <div class="chart-card">
-        <h3>Sellers por Transportista — Status</h3>
+        <h3>Sellers por Transportadora — Status</h3>
         <canvas id="chart-carrier-status" style="max-height:260px"></canvas>
       </div>
       <div class="chart-card">
-        <h3>% Downgraded por Transportista</h3>
+        <h3>% Downgraded por Transportadora</h3>
         <canvas id="chart-carrier-dg-pct" style="max-height:260px"></canvas>
       </div>
     </div>
 
     <div class="chart-grid chart-grid-1">
       <div class="chart-card">
-        <h3>Distribución de Sellers por Transportista — Stacked (OK / Intervened / Downgraded)</h3>
+        <h3>Distribuição de Sellers por Transportadora — Stacked (OK / Intervened / Downgraded)</h3>
         <canvas id="chart-carrier-stack" style="max-height:280px"></canvas>
       </div>
     </div>
@@ -736,9 +736,9 @@
     <!-- Evolução semanal por faixa de SLA -->
     <div class="table-card" style="margin-top:var(--gap)">
       <div class="table-toolbar" style="flex-wrap:wrap;gap:10px">
-        <h3>Evolución Semanal por Franja de SLA</h3>
+        <h3>Evolução Semanal por Faixa de SLA</h3>
         <div style="display:flex;align-items:center;gap:8px">
-          <label for="cw-carrier" style="font-size:13px;font-weight:600;color:#555">Transportista:</label>
+          <label for="cw-carrier" style="font-size:13px;font-weight:600;color:#555">Transportadora:</label>
           <select id="cw-carrier" onchange="dash.renderCarrierWeeklyTable()"
             style="border:1px solid #ddd;border-radius:6px;padding:5px 10px;font-size:13px;font-weight:600;background:#fff;cursor:pointer">
             <option value="__all__">Todas (consolidado)</option>
@@ -751,25 +751,25 @@
     <div class="alert-banner" style="margin-top:0">
       <span class="alert-icon">ℹ️</span>
       <span>
-        <strong>Fuente BigQuery:</strong>
+        <strong>Fonte BigQuery:</strong>
         <code>LK_SHP_FLEX_TRANSPORTATION.CARRIER_NAME</code> vinculado via
         <code>BT_SOE_SHIPMENT_SELLER_SLA.SHP_SHIPMENT_ID = LK_SHP_FLEX_TRANSPORTATION.SHP_SHIPMENT_ID</code> ·
-        Sellers sin transportista (~35%) usan recolección u otros modelos logísticos.
+        Sellers sem transportadora (~30%) usam retirada ou outros modelos logísticos.
       </span>
     </div>
   </div>
 
   <!-- ── TAB: PERFECT DELIVERY ───────────────────────────────────── -->
   <div class="tab-panel" id="tab-perfect-delivery">
-    <div class="section-title">Perfect Delivery por Transportista · MLM · Mayo 2026</div>
+    <div class="section-title">Perfect Delivery por Transportadora · MLB · Maio 2026</div>
 
     <!-- KPIs globais -->
     <div class="kpi-grid" style="margin-bottom:var(--gap)">
       <!-- Meta + PD Real + Gap -->
       <div class="kpi-card" style="border-top:3px solid #3483FA;background:linear-gradient(135deg,#F0F6FF,#E8F0FE)">
-        <div class="kpi-label" style="color:#1A4DB3">🎯 Meta MLM</div>
+        <div class="kpi-label" style="color:#1A4DB3">🎯 Meta Brasil</div>
         <div class="kpi-value" id="pd-meta" style="color:#3483FA">97.0%</div>
-        <div class="kpi-sub" style="color:#1A4DB3">referencia nacional</div>
+        <div class="kpi-sub" style="color:#1A4DB3">referência nacional</div>
       </div>
       <div class="kpi-card" style="border-top:3px solid #00A650">
         <div class="kpi-label">📦 Perfecty</div>
@@ -779,7 +779,7 @@
       <div class="kpi-card" style="border-top:3px solid #9B59B6">
         <div class="kpi-label">🌙 Correcty</div>
         <div class="kpi-value" id="pd-pos21-val" style="color:#9B59B6">—</div>
-        <div class="kpi-sub" id="pd-pos21-val-sub">% excluyendo ausencia nocturna</div>
+        <div class="kpi-sub" id="pd-pos21-val-sub">% excluindo ausência noturna</div>
       </div>
       <div class="kpi-card" id="pd-gap-card" style="border-top:3px solid #E53E3E;background:linear-gradient(135deg,#FFF5F5,#FEECEC)">
         <div class="kpi-label" style="color:#C53030">📉 Gap vs Meta</div>
@@ -788,9 +788,9 @@
       </div>
       <!-- Demais KPIs -->
       <div class="kpi-card c-blue">
-        <div class="kpi-label">Total Envíos</div>
+        <div class="kpi-label">Total Envios</div>
         <div class="kpi-value c-blue" id="pd-total">—</div>
-        <div class="kpi-sub">últimos 30 días</div>
+        <div class="kpi-sub">últimos 30 dias</div>
       </div>
       <div class="kpi-card c-green">
         <div class="kpi-label">✅ Perfect Delivery</div>
@@ -798,17 +798,17 @@
         <div class="kpi-sub" id="pd-pd-pct">—</div>
       </div>
       <div class="kpi-card c-orange">
-        <div class="kpi-label">🕐 Con Atraso</div>
+        <div class="kpi-label">🕐 Com Atraso</div>
         <div class="kpi-value c-orange" id="pd-delay">—</div>
         <div class="kpi-sub" id="pd-delay-pct">—</div>
       </div>
       <div class="kpi-card c-red">
-        <div class="kpi-label">🚪 Ausencia Receptor</div>
+        <div class="kpi-label">🚪 Ausência Receptor</div>
         <div class="kpi-value c-red" id="pd-absent">—</div>
         <div class="kpi-sub" id="pd-absent-pct">—</div>
       </div>
       <div class="kpi-card" style="border-left:4px solid #6366F1;background:linear-gradient(135deg,#EEF2FF,#E0E7FF)">
-        <div class="kpi-label" style="color:#3730A3">Mejor Transportista</div>
+        <div class="kpi-label" style="color:#3730A3">Melhor Transportadora</div>
         <div class="kpi-value" id="pd-best" style="color:#4F46E5;font-size:14px;font-weight:800">—</div>
         <div class="kpi-sub" id="pd-best-pct" style="color:#3730A3">—</div>
       </div>
@@ -817,7 +817,7 @@
     <!-- Gráfico de evolução PD Real vs PD 21h -->
     <div class="chart-row" style="margin-bottom:var(--gap)">
       <div class="chart-card" style="flex:1">
-        <div class="chart-title">Evolución Semanal · PD Real vs PD excluyendo Ausencia 21h+</div>
+        <div class="chart-title">Evolução Semanal · PD Real vs PD excluindo Ausência 21h+</div>
         <canvas id="chart-pd-trend-both" height="180"></canvas>
       </div>
     </div>
@@ -825,7 +825,7 @@
     <!-- Gráficos de falhas -->
     <div class="chart-row" style="margin-bottom:var(--gap)">
       <div class="chart-card" style="flex:1">
-        <div class="chart-title">Evolución de Fallas por Motivo · Histórico Semanal</div>
+        <div class="chart-title">Evolução de Falhas por Motivo · Histórico Semanal</div>
         <canvas id="chart-pd-fail-types" height="220"></canvas>
       </div>
     </div>
@@ -833,7 +833,7 @@
     <!-- Tabela detalhada -->
     <div class="table-card">
       <div class="table-toolbar">
-        <h3>Detalle por Transportista</h3>
+        <h3>Detalhe por Transportadora</h3>
         <div class="alert-banner" style="margin-top:0;font-size:12px">
           <span class="alert-icon">ℹ️</span>
           <span>
@@ -851,9 +851,9 @@
   <div class="tab-panel" id="tab-detalhes">
     <div class="table-card">
       <div class="table-toolbar">
-        <h3>Detalle por Seller × Nodo</h3>
+        <h3>Detalhe por Seller × Nodo</h3>
         <input class="table-search" id="table-search" type="text"
-               placeholder="Buscar seller ID, nodo, transportista…"
+               placeholder="Buscar seller ID, nodo, transportadora…"
                oninput="dash.renderTable()"/>
       </div>
       <div id="table-container"></div>
@@ -864,10 +864,10 @@
 
 <!-- ══ FOOTER ════════════════════════════════════════════════════ -->
 <footer class="page-footer page-content">
-  Moderación 2026 · MLM · Fuente:
+  Moderação 2026 · MLB · Fonte:
   <code>meli-bi-data.WHOWNER.BT_SOE_SELLER_PERFORMANCE_INCENTIVES</code> &amp;
   <code>BT_SOE_SHIPMENT_SELLER_SLA</code> ·
-  Datos reales MLM · RO nodo: 27/04/2026
+  Dados de amostra — substitua via queries BigQuery · RO nodo: 27/04/2026
 </footer>
 
 <!-- ══ TOAST ════════════════════════════════════════════════════ -->
@@ -906,12 +906,28 @@ const C = {
 };
 
 /* ── DATA GENERATION ────────────────────────────────────────── */
-const NODES_MLB = ["CDMX-N1", "CDMX-S1", "CDMX-O1", "CDMX-E1", "GDL-01", "MTY-01", "PUE-01", "QRO-01", "MER-01", "TIJ-01", "CUN-01", "LEO-01", "SLP-01", "AGS-01", "OAX-01"];
+const NODES_MLB = [
+  'SAO-01','SAO-02','RIO-01','RIO-02','BHZ-01',
+  'POA-01','CWB-01','BSB-01','SSA-01','FOR-01',
+  'REC-01','MAN-01','GYN-01','VIX-01','FLN-01',
+];
 
 /* Transportadoras MLB — nomes reais de CARRIER_NAME
    Fonte: meli-bi-data.WHOWNER.LK_SHP_FLEX_TRANSPORTATION via join 30 dias */
-const CARRIERS_MLB = [{"name": "RAPIBOY"}, {"name": "PACKATELAS"}, {"name": "MOBIICLUB"}, {"name": "MOOVA"}, {"name": "PIBOX"}];
-const SEG_MAP    = { muito_bom:'Muy Bueno', bom:'Bueno', muito_ruim:'Muy Malo' };
+const CARRIERS_MLB = [
+  { name: 'J3 Flex'                          },
+  { name: 'Expresso Flex'                    },
+  { name: 'FLEX BOYS - SAO PAULO'            },
+  { name: 'TM LOGISTICA'                     },
+  { name: 'Entrega São Paulo Logistica Ltda' },
+  { name: 'AL2A'                             },
+  { name: 'Chama Logística'                  },
+  { name: 'RR EXPRESS LOGÍSTICA'             },
+  { name: 'TRANSMOTO FLEX'                   },
+  { name: 'Speed Guri'                       },
+  { name: 'CWB Same Day'                     },
+];
+const SEG_MAP    = { muito_bom:'Muito Bom', bom:'Bom', muito_ruim:'Muito Ruim' };
 const STATUS_MAP = { ok:'OK', intervened:'Intervened', downgraded:'Downgraded' };
 
 /* ── Formatação global de números ─────────────────────────────────────────────
@@ -927,7 +943,7 @@ function fmtN(n) {
   }
   if (abs >= 10_000) return Math.round(n / 1_000) + 'K';
   if (abs >= 1_000)  return (n / 1_000).toFixed(1).replace(/\.0$/, '') + 'K';
-  return Number(n).toLocaleString('es-MX');
+  return Number(n).toLocaleString('pt-BR');
 }
 function fmtPct(v, t) { return t ? ((v / t) * 100).toFixed(1) + '%' : '—'; }
 
@@ -1318,17 +1334,17 @@ class Dashboard {
     badge.id = 'data-source-badge';
     if (type === 'real') {
       const dt = updatedAt ? new Date(updatedAt) : new Date();
-      const fmt = dt.toLocaleString('es-MX', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
-      badge.innerHTML = ` · <span style="background:#E6F9EE;color:#00A650;border:1px solid #00A650;border-radius:10px;padding:2px 10px;font-size:11px;font-weight:700">✅ Datos reales · Actualizado ${fmt}</span>`;
+      const fmt = dt.toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+      badge.innerHTML = ` · <span style="background:#E6F9EE;color:#00A650;border:1px solid #00A650;border-radius:10px;padding:2px 10px;font-size:11px;font-weight:700">✅ Dados reais · Atualizado ${fmt}</span>`;
     } else {
-      badge.innerHTML = ` · <span style="background:#FFF4E6;color:#FF7A00;border:1px solid #FF7A00;border-radius:10px;padding:2px 10px;font-size:11px;font-weight:700">⚠️ Datos de muestra — ejecuta update_dashboard.py</span>`;
+      badge.innerHTML = ` · <span style="background:#FFF4E6;color:#FF7A00;border:1px solid #FF7A00;border-radius:10px;padding:2px 10px;font-size:11px;font-weight:700">⚠️ Dados de amostra — execute update_dashboard.py</span>`;
     }
     footer.appendChild(badge);
   }
 
   /* persist filters */
   _saveState() {
-    localStorage.setItem('mod2026_mlm_v1', JSON.stringify({
+    localStorage.setItem('mod2026_mlb_v1', JSON.stringify({
       month:   document.getElementById('f-month').value,
       week:    document.getElementById('f-week').value,
       seg:     document.getElementById('f-seg').value,
@@ -1338,7 +1354,7 @@ class Dashboard {
   }
   _restoreState() {
     try {
-      const s = JSON.parse(localStorage.getItem('mod2026_mlm_v1') || '{}');
+      const s = JSON.parse(localStorage.getItem('mod2026_mlb_v1') || '{}');
       if (s.month)   document.getElementById('f-month').value   = s.month;
       if (s.week)    document.getElementById('f-week').value    = s.week;
       if (s.seg)     document.getElementById('f-seg').value     = s.seg;
@@ -1419,15 +1435,15 @@ class Dashboard {
     const pct = fmtPct;
     set('kpi-total',   fmt(total));
     set('kpi-ok',      fmt(ok));
-    set('kpi-ok-pct',  pct(ok,total)+' de los sellers');
+    set('kpi-ok-pct',  pct(ok,total)+' dos sellers');
     set('kpi-int',     fmt(itv));
-    set('kpi-int-pct', pct(itv,total)+' de los sellers');
+    set('kpi-int-pct', pct(itv,total)+' dos sellers');
     set('kpi-dg',      fmt(dg));
-    set('kpi-dg-pct',  pct(dg,total)+' de los sellers');
+    set('kpi-dg-pct',  pct(dg,total)+' dos sellers');
     set('kpi-risk',    fmt(risk));
     set('kpi-risk-pct', pct(risk,ok)+' dos sellers OK');
     set('kpi-inc',     fmt(totalInc));
-    set('kpi-inc-pct', 'de '+fmt(totalEnv)+' envíos ('+pct(totalInc,totalEnv)+')');
+    set('kpi-inc-pct', 'de '+fmt(totalEnv)+' envios ('+pct(totalInc,totalEnv)+')');
     set('kpi-perf',    avgPerf.toFixed(1)+'%');
   }
 
@@ -1445,11 +1461,11 @@ class Dashboard {
     set('kpi-env-inc',         fmt(inc));
     set('kpi-env-inc-pct',     pct(inc,tot)+' do total');
     set('kpi-env-delay',       fmt(delay));
-    set('kpi-env-delay-pct',   pct(delay,inc)+' de los incorrectos');
+    set('kpi-env-delay-pct',   pct(delay,inc)+' dos incorretos');
     set('kpi-env-absent',      fmt(abs));
-    set('kpi-env-absent-pct',  pct(abs,inc)+' de los incorrectos');
+    set('kpi-env-absent-pct',  pct(abs,inc)+' dos incorretos');
     set('kpi-env-repro',       fmt(rep));
-    set('kpi-env-repro-pct',   pct(rep,inc)+' de los incorrectos');
+    set('kpi-env-repro-pct',   pct(rep,inc)+' dos incorretos');
   }
 
   /* ── Chart: donut status ─────────────────────────────────── */
@@ -1466,7 +1482,7 @@ class Dashboard {
   renderChartSeg() {
     const s    = this.filtSellers;
     const segs = ['muito_bom','bom','muito_ruim'];
-    const lbs  = ['Muy Buenos\n≥97%','Buenos\n90–97%','Muy Malos\n<90%'];
+    const lbs  = ['Muito Bons\n≥97%','Bons\n90–97%','Muito Ruins\n<90%'];
     const okD  = segs.map(sg=>s.filter(x=>x.seg===sg&&x.status==='ok').length);
     const itD  = segs.map(sg=>s.filter(x=>x.seg===sg&&x.status==='intervened').length);
     const dgD  = segs.map(sg=>s.filter(x=>x.seg===sg&&x.status==='downgraded').length);
@@ -1574,15 +1590,15 @@ class Dashboard {
       ${th('nodo','Nodo')}
       ${th('seg','Segmento')}
       ${th('status','Estado Nodo')}
-      ${th('carrier','Transportista')}
-      ${th('perf','% Buen Comportamiento')}
+      ${th('carrier','Transportadora')}
+      ${th('perf','% Bom Comportamento')}
     </tr></thead><tbody>`;
     const isRisk = s => s.status === 'ok' && s.perf < 90;
     page.forEach(s => { html += `<tr style="${isRisk(s)?'background:#FFFBEB;border-left:3px solid #F59E0B':''}">
       <td><code style="background:#EBF3FF;padding:1px 5px;border-radius:4px;font-size:12px">${s.seller_id}</code></td>
       <td><strong>${s.nodo}</strong></td>
       <td>${sBadge(s.seg)}</td>
-      <td>${stBadge(s.status)}${isRisk(s)?'<span title="Status OK pero performance por debajo de 90% — aguardando intervención" style="margin-left:6px;background:#FEF3C7;color:#92400E;border:1px solid #F59E0B;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:700;cursor:help">⚠️ En cola</span>':''}</td>
+      <td>${stBadge(s.status)}${isRisk(s)?'<span title="Status OK mas performance abaixo de 90% — aguardando intervenção" style="margin-left:6px;background:#FEF3C7;color:#92400E;border:1px solid #F59E0B;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:700;cursor:help">⚠️ Em fila</span>':''}</td>
       <td><span style="font-size:12px;font-weight:700;color:#444">${s.carrier || '<span style="color:#aaa">—</span>'}</span></td>
       <td><strong style="color:${s.perf>=97?ML.green:s.perf>=90?ML.orange:ML.red}">${s.perf.toFixed(1)}%</strong></td>
     </tr>`; });
@@ -1590,11 +1606,11 @@ class Dashboard {
 
     const pages = Math.ceil(total/this.pageSize);
     html += `<div class="pagination">
-      <span>Mostrando ${start+1}–${Math.min(start+this.pageSize,total)} de ${total.toLocaleString('es-MX')} registros</span>
+      <span>Exibindo ${start+1}–${Math.min(start+this.pageSize,total)} de ${total.toLocaleString('pt-BR')} registros</span>
       <div class="pagination-btns">
         <button class="btn btn-outline btn-sm" onclick="dash.prevPage()">← Ant.</button>
         <span>Pág ${this.page+1} / ${pages}</span>
-        <button class="btn btn-outline btn-sm" onclick="dash.nextPage(${total})">Sig. →</button>
+        <button class="btn btn-outline btn-sm" onclick="dash.nextPage(${total})">Próx. →</button>
       </div>
     </div>`;
 
@@ -1624,7 +1640,7 @@ class Dashboard {
     this._populateCarrierWeeklySelect();
     const sel      = document.getElementById('cw-carrier');
     const chosen   = sel ? sel.value : '__all__';
-    const fmt      = n => n.toLocaleString('es-MX');
+    const fmt      = n => n.toLocaleString('pt-BR');
     const pct      = (v, t) => t ? ((v/t)*100).toFixed(1)+'%' : '—';
     const arrow    = (cur, prev) => {
       if (prev === undefined) return '';
@@ -1649,8 +1665,8 @@ class Dashboard {
       /* Tabela consolidada: linhas = carrier, colunas = semana (mb/bom/mr em mini-pills) */
       const weeks = ['W1','W2','W3','W4','W5','W6','W7','W8'];
       const wLabels = {
-        W1:'Sem 1 06–12/04', W2:'Sem 2 13–19/04', W3:'Sem 3 20–26/04', W4:'Sem 4 27/04–03/05',
-        W5:'Sem 5 04–10/05', W6:'Sem 6 11–17/05', W7:'Sem 7 18–24/05', W8:'Sem 8 25–31/05'
+        W1:'W1 06–12/04', W2:'W2 13–19/04', W3:'W3 20–26/04', W4:'W4 27/04–03/05',
+        W5:'W5 04–10/05', W6:'W6 11–17/05', W7:'W7 18–24/05', W8:'W8 25–31/05'
       };
       html += `<table class="data-table" style="font-size:12px"><thead><tr>
         <th style="min-width:180px">Transportadora</th>`;
@@ -1689,11 +1705,11 @@ class Dashboard {
       const wks = CW[chosen] || [];
       html += `<table class="data-table" style="font-size:13px"><thead><tr>
         <th>Semana</th>
-        <th style="color:#00A650">🟢 Muy Buenos ≥97%</th>
+        <th style="color:#00A650">🟢 Muito Bons ≥97%</th>
         <th>% do total</th>
-        <th style="color:#FF7A00">🟡 Buenos 90–97%</th>
+        <th style="color:#FF7A00">🟡 Bons 90–97%</th>
         <th>% do total</th>
-        <th style="color:#E53E3E">🔴 Muy Malos &lt;90%</th>
+        <th style="color:#E53E3E">🔴 Muito Ruins &lt;90%</th>
         <th>% do total</th>
         <th>Total</th>
         <th>Var. Total</th>
@@ -1750,12 +1766,18 @@ class Dashboard {
     });
 
     const colors = {
-      'RAPIBOY'      : '#3483FA',
-      'PACKATELAS'   : '#00A650',
-      'MOBIICLUB'    : '#FF7733',
-      'MOOVA'        : '#9B59B6',
-      'PIBOX'        : '#F39C12',
-      '(Sem carrier)': '#ccc'
+      'J3 Flex'                          : '#FFE600',
+      'Expresso Flex'                    : '#3483FA',
+      'FLEX BOYS - SAO PAULO'            : '#FF7733',
+      'TM LOGISTICA'                     : '#9B59B6',
+      'Entrega São Paulo Logistica Ltda' : '#00A650',
+      'AL2A'                             : '#C0392B',
+      'Chama Logística'                  : '#F39C12',
+      'RR EXPRESS LOGÍSTICA'             : '#1ABC9C',
+      'TRANSMOTO FLEX'                   : '#E74C3C',
+      'Speed Guri'                       : '#2980B9',
+      'CWB Same Day'                     : '#8E44AD',
+      '(Sem carrier)'                    : '#ccc'
     };
 
     grid.innerHTML = Object.entries(byCarrier)
@@ -2286,7 +2308,7 @@ class Dashboard {
           legend:{ display:legend, position:'bottom', labels:{ usePointStyle:true, padding:12, font:{size:11,weight:'700'} } },
           tooltip:{ callbacks:{ label: ctx=>{
             const tot = ctx.dataset.data.reduce((a,b)=>a+b,0);
-            return ` ${ctx.label}: ${ctx.parsed.toLocaleString('es-MX')} (${((ctx.parsed/tot)*100).toFixed(1)}%)`;
+            return ` ${ctx.label}: ${ctx.parsed.toLocaleString('pt-BR')} (${((ctx.parsed/tot)*100).toFixed(1)}%)`;
           }}}
         }
       }
@@ -2327,12 +2349,12 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     const panelId = 'tab-' + btn.dataset.tab;
     const panel = document.getElementById(panelId);
     if (panel) panel.classList.add('active');
-    localStorage.setItem('mod2026_mlm_tab', btn.dataset.tab);
+    localStorage.setItem('mod2026_mlb_tab', btn.dataset.tab);
   });
 });
 
 /* restore active tab */
-const savedTab = localStorage.getItem('mod2026_mlm_tab');
+const savedTab = localStorage.getItem('mod2026_mlb_tab');
 if (savedTab) {
   const btn = document.querySelector(`.tab-btn[data-tab="${savedTab}"]`);
   if (btn) btn.click();
